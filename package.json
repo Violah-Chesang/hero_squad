@@ -4,6 +4,8 @@
   "description": "This is a web application that a user places heroes in different squads and the squad's scores are calculated by the heroes' strengths and weaknesses",
   "main": "app.js",
   "scripts": {
+    "npm run develop" : "nodemon app.js",
+    "npm run deploy" : "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
