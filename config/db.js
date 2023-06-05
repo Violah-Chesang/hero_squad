@@ -25,4 +25,4 @@ function getDbConnection(){
 
     return db;
 }
-module.exports = getDbConnection();
+module.exports = getDbConnection;
