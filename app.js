@@ -1,11 +1,14 @@
 const express = require('express');
 const dbConnection = require('./config/db');
+const heroRouter = require('./models/hero');
+
 
 
 const app = express();
 
 //add body parser
 app.use(express.json());
+app.use(heroRouter);
 
 const db = dbConnection();
 
