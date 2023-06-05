@@ -4,8 +4,8 @@
   "description": "This is a web application that a user places heroes in different squads and the squad's scores are calculated by the heroes' strengths and weaknesses",
   "main": "app.js",
   "scripts": {
-    "npm run develop" : "nodemon app.js",
-    "npm run deploy" : "node app.js",
+    "dev": "nodemon app.js",
+    "prod": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/Violah-Chesang/hero_squad/issues"
   },
-  "homepage": "https://github.com/Violah-Chesang/hero_squad#readme"
+  "homepage": "https://github.com/Violah-Chesang/hero_squad#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.2.2",
+    "nodemon": "^2.0.22"
+  }
 }
