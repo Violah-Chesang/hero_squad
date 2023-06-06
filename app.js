@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors'); // Import the 'cors' package
 const dbConnection = require('./config/db');
-const heroRouter = require('./models/hero');
+const heroRouter = require('./routes/hero');
 
 
 
