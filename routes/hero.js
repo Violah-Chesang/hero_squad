@@ -9,7 +9,7 @@ router.post('/hero/add', (req,res) => {
     res.send("dd a new hero with payload");
 });
 
-//Find a hero - GET, Hero/find/:heroId, Hero.find({id: heroId})- List all the squads
+ //Find a hero - GET, Hero/find/:heroId, Hero.find({id: heroId})- List all the squads
 router.get('/hero/find/:heroId', (req,res) => {
     res.json({"message" : `Find a user by Id: ${req.params.heroId}`})
 });
