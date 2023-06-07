@@ -41,7 +41,13 @@ router.post('/hero/allocate-squad/:heroId', (req,res) => {
 
 //hero without squad(assigned==false)- GET, hero/without-squad
 router.get('/hero/without-squad', (req,res) => {
-    res.json({"message" : `Heroes without squads}`})
+    res.json({"message" : `Heroes without squads`})
+});
+
+//Hero should not be in more than one squad- POST, hero/hero-assigned-squad/:heroId
+//if assigned is true give an error
+router.post('/hero/hero-assigned-squad/:heroId', (req,res) => {
+    res.json({"message" : `Check if a hero has been assigned a squad by Id. Id no. ${req.params.heroId}`})
 });
 
 module.exports = router
