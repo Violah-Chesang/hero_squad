@@ -33,4 +33,10 @@ router.post('/hero/delete/:heroId', (req,res) => {
 router.post('/hero/allocate-squad/:heroId', (req,res) => {
     res.json({"message" : `Allocate a hero to a squad by Id. Id no. ${req.params.heroId}`})
 });
+
+//hero without squad(assigned==false)- GET, hero/without-squad
+router.get('/hero/without-squad', (req,res) => {
+    res.json({"message" : `Heroes without squads}`})
+});
+
 module.exports = router
