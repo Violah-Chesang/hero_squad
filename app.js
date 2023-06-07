@@ -3,6 +3,7 @@ const cors = require('cors'); // Import the 'cors' package
 const dbConnection = require('./config/db');
 const heroRouter = require('./routes/hero');
 const squadRouter = require('./routes/squad');
+const strengthRouter = require('./routes/strength');
 
 
 
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use(heroRouter);
 app.use(squadRouter);
+app.use(strengthRouter);
 
 const db = dbConnection();
 
