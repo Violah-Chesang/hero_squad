@@ -36,7 +36,7 @@ router.post('/hero/allocate-squad/:heroId', (req,res) => {
 
 //hero without squad(assigned==false)- GET, hero/without-squad
 router.get('/hero/without-squad', (req,res) => {
-    res.json({"message" : `Heroes without squads}`})
+    res.json({"message" : `Heroes without squads`})
 });
 
 //Hero should not be in more than one squad- POST, hero/hero-assigned-squad/:heroId
