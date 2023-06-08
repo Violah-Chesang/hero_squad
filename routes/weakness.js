@@ -1,11 +1,14 @@
 const express = require('express');
-const Weakness = require('../models/strength');
+const Weakness = require('../models/weakness');
 
 const router = express.Router()
 
 // Create a weakness - POST, weakness/add, newWeakness.Save()
 router.post('/weakness/add', (req,res) => {
-    res.json({"message" : `Add a new weakness`});
+    const weaknessBody = req.body;
+    let newWeakness = new Weakness(weaknessBody);
+    newWeakness.save();
+    res.json(newWeakness);
 });
 
 //View all the weaknesses- GET, weakness/all, weakness.find({})
