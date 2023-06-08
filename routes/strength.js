@@ -38,8 +38,13 @@ router.post('/strength/update/:strengthId/:name',async (req,res) => {
 });
 
 //delete a strength - POST/DELETE, /strength/delete/:strengthId, strength.findOneAndUpdate({id: strengthId})- deleted : true
-router.post('/strength/delete/:strengthId', (req,res) => {
-    res.json({"message" : `delete a strength by Id: ${req.body.deleted}`})
+router.post('/strength/delete/:strengthId', async(req,res) => {
+    const filter = {"strengthId":req.params.strengthId};
+    const update = {"deleted" : true};
+   
+    await Strength.findOneAndUpdate(filter, update);
+
+    res.json({"message" : `The strength has been deleted.`})
 });
 
 
