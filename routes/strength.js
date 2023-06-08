@@ -5,7 +5,11 @@ const router = express.Router()
 
 // Create a strength - POST, strength/add, newStrength.Save()
 router.post('/strength/add', (req,res) => {
-    res.json({"message" : `Add a new strength`});
+    let newData = req.body;
+    Strength.insertMany(newData);
+    let newStrength = new Strength(newData);
+    newStrength.save();
+    res.json(newStrength);
 });
 
 //View all the strength- GET, strength/all, Strength.find({})
