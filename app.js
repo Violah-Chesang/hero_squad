@@ -4,7 +4,7 @@ const dbConnection = require('./config/db');
 const heroRouter = require('./routes/hero');
 const squadRouter = require('./routes/squad');
 const strengthRouter = require('./routes/strength');
-
+const weaknessRouter = require('./routes/weakness');
 
 
 const app = express();
@@ -17,6 +17,7 @@ app.use(express.json());
 app.use(heroRouter);
 app.use(squadRouter);
 app.use(strengthRouter);
+app.use(weaknessRouter);
 
 const db = dbConnection();
 
