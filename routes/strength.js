@@ -13,18 +13,28 @@ router.post('/strength/add', (req,res) => {
 });
 
 //View all the strength- GET, strength/all, Strength.find({})
-router.get('/strength/all', (req,res) => {
-    res.json({"message" : `View all the strengths`})
+router.get('/strength/all',async (req,res) => {
+    const allStrengths= await Strength.find({});
+    res.json(allStrengths);
 });
 
  //Find a strength - GET, /strength/find/:strengthId, Strength.find({id: strengthId})
-router.get('/strength/find/:strengthId', (req,res) => {
-    res.json({"message" : `Find a strength by Id: ${req.params.strengthId}`})
+router.get('/strength/find/:strengthId',async (req,res) => {
+    const getId = req.params.strengthId;
+    const id = await Strength.find({"strengthId": getId})
+    res.json(id)
 });
 
 //Update a strength - POST/PUT, strength/update/:strengthId, Strength.findOneAndUpdate({id: strengthId})
-router.post('/strength/update/:strengthId', (req,res) => {
-    res.json({"message" : `Update strength's information by Id: ${req.body}`})
+router.post('/strength/update/:strengthId/:name',async (req,res) => {
+    const filter = {"strengthId":req.params.strengthId};
+    const update = {"name" : req.params.name};
+    const options = {
+        new : true
+    }
+
+    const updatedRecord = await Strength.findOneAndUpdate(filter, update, options);
+    res.json(updatedRecord)
 });
 
 //delete a strength - POST/DELETE, /strength/delete/:strengthId, strength.findOneAndUpdate({id: strengthId})- deleted : true
