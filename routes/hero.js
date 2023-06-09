@@ -20,8 +20,9 @@ router.get('/hero/all',async (req,res) => {
 });
 
  //Find a hero - GET, Hero/find/:heroId, Hero.find({id: heroId})- List all the squads
-router.get('/hero/find/:heroId', (req,res) => {
-    res.json({"message" : `Find a user by Id: ${req.params.heroId}`})
+router.get('/hero/find/:heroId',async (req,res) => {
+    const heroById = await Hero.find({"heroId": req.params.heroId});
+    res.json(heroById);
 });
 
 //Update a hero - POST/PUT, Hero/update/:heroId, Hero.findOneAndUpdate({id: heroId})
