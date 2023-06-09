@@ -1,17 +1,22 @@
 const express = require('express');
-const hero = require('../models/hero');
+const Hero = require('../models/hero');
 
 const router = express.Router();
 
 // Create a hero - POST, hero/add, newHero.Save()
 router.post('/hero/add', (req,res) => {
-    res.json({"message" : `Add a new hero with payload: ${req.body}`});
-    res.send("dd a new hero with payload");
-});
+    const heroBody = req.body;
+
+    const newHero = new Hero(heroBody);
+     newHero.save();
+    res.json(newHero);
+ });
+
 
 //View all the heros- GET, hero/all, Hero.find({})
 router.get('/hero/all', (req,res) => {
-    res.json({"message" : `View all the heros`})
+    const allHeroes = Hero.find({});
+    res.json(allSquads);
 });
 
  //Find a hero - GET, Hero/find/:heroId, Hero.find({id: heroId})- List all the squads
