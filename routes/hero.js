@@ -14,9 +14,9 @@ router.post('/hero/add', (req,res) => {
 
 
 //View all the heros- GET, hero/all, Hero.find({})
-router.get('/hero/all', (req,res) => {
-    const allHeroes = Hero.find({});
-    res.json(allSquads);
+router.get('/hero/all',async (req,res) => {
+    const allHeroes =await Hero.find({});
+    res.json(allHeroes);
 });
 
  //Find a hero - GET, Hero/find/:heroId, Hero.find({id: heroId})- List all the squads
