@@ -1,32 +1,67 @@
 const express = require('express');
-const hero = require('../models/hero');
+const Hero = require('../models/hero');
+const Strength = require('../models/strength');
+const Weakness = require('../models/weakness');
+const Squad = require('../models/squad');
 
 const router = express.Router();
 
 // Create a hero - POST, hero/add, newHero.Save()
-router.post('/hero/add', (req,res) => {
-    res.json({"message" : `Add a new hero with payload: ${req.body}`});
-    res.send("dd a new hero with payload");
-});
+router.post('/hero/add',async (req,res) => {
+    const heroBody = req.body;
+     //strength
+    const strength = await Strength.find({"name": req.body.name});
+    //weakness
+    const weakness = await Weakness.find({"name" : req.body.name}); 
+    //squad
+    const squad = await Squad.find({"name" : req.body.name});
+
+    const newHero = new Hero({
+        heroId : heroBody.heroId,
+        name : heroBody.name,
+        age : heroBody.age,
+        strength :strength,
+        weakness : weakness,
+        deleted : false,
+        assigned :false,
+        squadId: squad
+    });
+    newHero.save();
+    res.json(newHero);
+ });
+
 
 //View all the heros- GET, hero/all, Hero.find({})
-router.get('/hero/all', (req,res) => {
-    res.json({"message" : `View all the heros`})
+router.get('/hero/all',async (req,res) => {
+    const allHeroes =await Hero.find({});
+    res.json(allHeroes);
 });
 
  //Find a hero - GET, Hero/find/:heroId, Hero.find({id: heroId})- List all the squads
-router.get('/hero/find/:heroId', (req,res) => {
-    res.json({"message" : `Find a user by Id: ${req.params.heroId}`})
+router.get('/hero/find/:heroId',async (req,res) => {
+    const heroById = await Hero.find({"heroId": req.params.heroId});
+    res.json(heroById);
 });
 
 //Update a hero - POST/PUT, Hero/update/:heroId, Hero.findOneAndUpdate({id: heroId})
-router.post('/hero/update/:heroId', (req,res) => {
-    res.json({"message" : `Update hero's information by Id: ${req.body}`})
+router.post('/hero/update/:heroId',async (req,res) => {
+    const filter = {"heroId" : req.params.heroId};
+    const update = {"name": req.params.name};
+    const options = { new : true};
+
+    const updatedHero =  await Hero.findOneAndUpdate(filter,update,options);
+
+    res.json(updatedHero);
 });
 
 //delete a hero - POST/DELETE, Hero/delete/:heroId, Hero.findOneAndUpdate({id: heroId})- deleted : true
-router.post('/hero/delete/:heroId', (req,res) => {
-    res.json({"message" : `delete a hero by Id: ${req.body.deleted}`})
+router.post('/hero/delete/:heroId',async (req,res) => {
+    const filter = {"heroId" : req.params.heroId};
+    const update = {"deleted": true};
+
+    const deletedHero =  await Hero.findOneAndUpdate(filter,update);
+
+    res.json({"message" : "Record deleted"});
 });
 
  //Find a hero's characteristics - GET, Hero/features/:heroId, Hero.find({id: heroId})

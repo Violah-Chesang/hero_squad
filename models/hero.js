@@ -8,9 +8,7 @@ let heroSchema = new mongoose.Schema({
 	weakness: {type: String}, //weaknessId from Weakness module
     deleted : {type : Boolean, default: false},
 	assigned: {type: Boolean, default: false},
-	squadId : {type: String},
-    weaknessId : {type: String}
-
+	squadId : {type: String}
 });
 
 let Hero = mongoose.model('Hero', heroSchema);
