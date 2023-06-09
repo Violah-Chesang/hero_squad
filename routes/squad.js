@@ -47,9 +47,12 @@ router.post('/squad/delete/:squadId',async (req,res) => {
 });
 
  //Find a squad's characteristics - GET, squad/features/:squadId, squad.find({id: squadId})
- //we need: Id, name, cause, heroes
- router.get('/squad/features/:squadId', (req,res) => {
-    res.json({"message" : `Find a squad's characteristics by Id: ${req.params.squadId}`})
+ //we need: Id, name, cause, , number of heroes
+ router.get('/squad/features/:squadId',async (req,res) => {
+    const squadFeatures =await Squad.find({});
+//Get all heroes with squadfeature.squadId
+// The length of the result will be he number of heroes
+
 });
 
 module.exports = router
