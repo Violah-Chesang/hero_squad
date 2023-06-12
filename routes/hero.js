@@ -37,7 +37,7 @@ router.get('/hero/all',async (req,res) => {
     res.json(allHeroes);
 });
 
- //Find a hero - GET, Hero/find/:heroId, Hero.find({id: heroId})- List all the squads
+ //Find a hero and thei characteristics - GET, Hero/find/:heroId, Hero.find({id: heroId})
 router.get('/hero/find/:heroId',async (req,res) => {
     const heroById = await Hero.find({"heroId": req.params.heroId});
     res.json(heroById);
@@ -64,25 +64,29 @@ router.post('/hero/delete/:heroId',async (req,res) => {
     res.json({"message" : "Record deleted"});
 });
 
- //Find a hero's characteristics - GET, Hero/features/:heroId, Hero.find({id: heroId})
- router.get('/hero/features/:heroId', (req,res) => {
-    res.json({"message" : `Find a hero's characteristics by Id: ${req.params.heroId}`})
-});
-
 //Place a hero in a squad - POST, hero/allocate-squad/:heroId, newHeroSquad.save() 
 router.post('/hero/allocate-squad/:heroId', (req,res) => {
-    res.json({"message" : `Allocate a hero to a squad by Id. Id no. ${req.params.heroId}`})
+    //check if assigned is false. If it is, check a squad that the max no. has not been reached and change the hero's squadId to be of any squad of the user's choice 
+    
+
 });
 
 //hero without squad(assigned==false)- GET, hero/without-squad
-router.get('/hero/without-squad', (req,res) => {
-    res.json({"message" : `Heroes without squads`})
+router.get('/hero/without-squad',async (req,res) => {
+    //get all hero that assigned is false
+    const notAssignedHeroes =await Hero.find({"assigned" : false});
+
+    res.json(notAssignedHeroes);
 });
 
 //Hero should not be in more than one squad- POST, hero/hero-assigned-squad/:heroId
 //if assigned is true give an error
-router.post('/hero/hero-assigned-squad/:heroId', (req,res) => {
-    res.json({"message" : `Check if a hero has been assigned a squad by Id. Id no. ${req.params.heroId}`})
+router.get('/hero/hero-assigned-squad/:heroId', async (req,res) => {
+    const hero = await Hero.find({"heroId" : req.params.heroId})
+
+     if(hero.assigned){
+        res.json({"message" : "Hero already assigned to a squad"})
+    }
 });
 
 module.exports = router
