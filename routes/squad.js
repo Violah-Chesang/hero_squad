@@ -1,5 +1,6 @@
 const express = require('express');
 const Squad = require('../models/squad');
+const Hero = require('../models/hero');
 
 const router = express.Router();
 
@@ -47,12 +48,13 @@ router.post('/squad/delete/:squadId',async (req,res) => {
 });
 
  //Find a squad's characteristics - GET, squad/features/:squadId, squad.find({id: squadId})
- //we need: Id, name, cause, , number of heroes
+ //we need: Id, name, cause, hero names , number of heroes
  router.get('/squad/features/:squadId',async (req,res) => {
     const squadFeatures =await Squad.find({});
-//Get all heroes with squadfeature.squadId
-// The length of the result will be he number of heroes
-
+    //hero names in this squad
+    const heroes = await Hero.find({"name" : squadFeatures.name});
+    // The length of the result will be he number of heroes
+    const noOfHeroes = heroes.length;
 });
 
 module.exports = router
