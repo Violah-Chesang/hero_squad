@@ -10,21 +10,29 @@ const router = express.Router();
 router.post('/hero/add',async (req,res) => {
     const heroBody = req.body;
      //strength
-    const strength = await Strength.find({"name": req.body.name});
+     const strengthId = req.body.strengthId;
+    const strength = await Strength.find({"strengthId": strengthId});
+    const strengthName = strength.name;
+
     //weakness
-    const weakness = await Weakness.find({"name" : req.body.name}); 
+    const weaknessId = req.body.weaknessId;
+    const weakness = await Weakness.find({"weaknessId" : weaknessId}); 
+    const weaknessName = weakness.name;
+
     //squad
-    const squad = await Squad.find({"name" : req.body.name});
+    const squadId = req.body.squadId;
+    const squad = await Weakness.find({"squadId" : squadId}); 
+    const squadName = squad.name;
 
     const newHero = new Hero({
         heroId : heroBody.heroId,
         name : heroBody.name,
         age : heroBody.age,
-        strength :strength,
-        weakness : weakness,
+        strength :strengthName,
+        weakness : weaknessName,
         deleted : false,
         assigned :false,
-        squadId: squad
+        squadId: squadName
     });
     newHero.save();
     res.json(newHero);
@@ -37,7 +45,7 @@ router.get('/hero/all',async (req,res) => {
     res.json(allHeroes);
 });
 
- //Find a hero and thei characteristics - GET, Hero/find/:heroId, Hero.find({id: heroId})
+ //Find a hero and their characteristics - GET, Hero/find/:heroId, Hero.find({id: heroId})
 router.get('/hero/find/:heroId',async (req,res) => {
     const heroById = await Hero.find({"heroId": req.params.heroId});
     res.json(heroById);
@@ -46,7 +54,7 @@ router.get('/hero/find/:heroId',async (req,res) => {
 //Update a hero - POST/PUT, Hero/update/:heroId, Hero.findOneAndUpdate({id: heroId})
 router.post('/hero/update/:heroId',async (req,res) => {
     const filter = {"heroId" : req.params.heroId};
-    const update = {"name": req.params.name};
+    const update = {"name": req.body.name};
     const options = { new : true};
 
     const updatedHero =  await Hero.findOneAndUpdate(filter,update,options);
@@ -66,8 +74,21 @@ router.post('/hero/delete/:heroId',async (req,res) => {
 
 //Place a hero in a squad - POST, hero/allocate-squad/:heroId, newHeroSquad.save() 
 router.post('/hero/allocate-squad/:heroId', (req,res) => {
-    //check if assigned is false. If it is, check a squad that the max no. has not been reached and change the hero's squadId to be of any squad of the user's choice 
+    //check if assigned is false and assigns true.
+    const heroId = req.params.heroId;
+    const squadId = req.body.squadId;
+    const assigned = req.body.assigned;
     
+     function assignHero(squadId, assigned){
+        if(!assigned && !squadId){
+            assigned = true;
+            squadId = {"squadId" : squadId};
+        }
+        return {squadId, assigned};
+     }
+     const {squadId : updatedSquadId, assigned : updatedAssigned} = assignHero(squadId, assigned);
+    
+     res.json({ heroId, updatedSquadId, updatedAssigned });
 
 });
 
