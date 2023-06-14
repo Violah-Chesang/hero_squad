@@ -39,12 +39,17 @@ router.post('/squad/update/:squadId/:cause',async (req,res) => {
 
 //delete a squad - POST/DELETE, squad/delete/:squadId, Squad.findOneAndUpdate({id: squadId})- deleted : true
 router.post('/squad/delete/:squadId',async (req,res) => {
-    const filter = {"squadId" : req.params.squadId};
-    const update = {"deleted": true};
+    const squadId = req.params.squadId;
 
-    const deletedSquad =  await Squad.findOneAndUpdate(filter,update);
+    const squadDetails = await Squad.find({"squadId" : squadId});
 
-    res.json({"message" : "Record deleted"});
+    let deletedState = squadDetails.deleted;
+
+    if(!deletedState){
+        deletedState = true;
+    }
+
+    res.json(squadDetails);
 });
 
  //Find a squad's characteristics - GET, squad/features/:squadId, squad.find({id: squadId})
