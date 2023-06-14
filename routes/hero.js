@@ -10,32 +10,39 @@ const router = express.Router();
 router.post('/hero/add',async (req,res) => {
     const heroBody = req.body;
      //strength
-     const strengthId = req.body.strengthId;
-    const strength = await Strength.find({"strengthId": strengthId});
-    const strengthName = strength.name;
-
+    const strengthFeature =await Strength.findOne({"strengthId" : req.body.strengthId});
+   
+    if(!strengthFeature){
+        res.status(400).json({"error" : "Could not find the strength"});
+    }
+   
     //weakness
-    const weaknessId = req.body.weaknessId;
-    const weakness = await Weakness.find({"weaknessId" : weaknessId}); 
-    const weaknessName = weakness.name;
+    const weaknessFeature =await Weakness.findOne({"weaknessId" : req.body.weaknessId});
+   
+    if(!weaknessFeature){
+        res.status(400).json({"error" : "Could not find the weakness"});
+    }
 
     //squad
-    const squadId = req.body.squadId;
-    const squad = await Weakness.find({"squadId" : squadId}); 
-    const squadName = squad.name;
+    const findHerosSquad =await Squad.findOne({"squadId" : req.body.squadId});
+   
+    if(!findHerosSquad){
+        res.status(400).json({"error" : "Could not find the squad"});
+    } 
 
     const newHero = new Hero({
         heroId : heroBody.heroId,
         name : heroBody.name,
         age : heroBody.age,
-        strength :strengthName,
-        weakness : weaknessName,
+        strength :strengthFeature.name,
+        weakness : weaknessFeature.name,
         deleted : false,
         assigned :false,
-        squadId: squadName
-    });
-    newHero.save();
-    res.json(newHero);
+        squadId: findHerosSquad.name
+      });
+
+        await newHero.save();
+        res.json(newHero);
  });
 
 
