@@ -19,8 +19,7 @@ router.get('/weakness/all',async (req,res) => {
 
  //Find a weakness - GET, /weakness/find/:weaknessId, weakness.find({id: weaknessId})
 router.get('/weakness/find/:weaknessId',async (req,res) => {
-    const getId = req.params.weaknessId;
-    const id = await Weakness.find({"weaknessId": getId})
+    const id = await Weakness.findOne({"weaknessId": req.params.weaknessId})
     res.json(id)
 });
 
@@ -37,10 +36,18 @@ router.post('/weakness/update/:weaknessId/:name',async (req,res) => {
 });
 
 //delete a weakness - POST/DELETE, /weakness/delete/:weaknessId, weakness.findOneAndUpdate({id: weaknessId})- deleted : true
-router.post('/weakness/delete/:weaknessId', (req,res) => {
-    res.json({"message" : `delete a weakness by Id: ${req.body.deleted}`})
+router.post('/weakness/delete/:weaknessId',async (req,res) => {
+
+    if(!req.params.weaknessId){
+        res.json({"Error" : "Could not find the ID"})
+    }else{
+        const filter = {"weaknessId" : req.params.weaknessId};
+        const update = {"deleted": true};
+
+        const deletedweakness =  await Weakness.findOneAndUpdate(filter,update, {new:true});
+
+        res.json({deletedweakness});
+    }
 });
-
-
 
 module.exports = router;
