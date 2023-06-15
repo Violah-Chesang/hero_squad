@@ -11,31 +11,35 @@ router.post('/hero/add',async (req,res) => {
     const heroBody = req.body;
      //strength
     const strengthFeature =await Strength.findOne({"strengthId" : req.body.strengthId});
-   
+    
+  
     if(!strengthFeature){
         res.status(400).json({"error" : "Could not find the strength"});
     }
+    const strengthName = strengthFeature.name;
+
    
-    //weakness
+    // //weakness
     const weaknessFeature =await Weakness.findOne({"weaknessId" : req.body.weaknessId});
    
     if(!weaknessFeature){
         res.status(400).json({"error" : "Could not find the weakness"});
     }
+    const weaknessName = weaknessFeature.name;
 
     //squad
     const findHerosSquad =await Squad.findOne({"squadId" : req.body.squadId});
    
     if(!findHerosSquad){
         res.status(400).json({"error" : "Could not find the squad"});
-    } 
-
+    }
+   
     const newHero = new Hero({
         heroId : heroBody.heroId,
         name : heroBody.name,
         age : heroBody.age,
-        strength :strengthFeature.name,
-        weakness : weaknessFeature.name,
+        strength :strengthName,
+        weakness : weaknessName,
         deleted : false,
         assigned :false,
         squadId: findHerosSquad.name
