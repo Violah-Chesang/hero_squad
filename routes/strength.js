@@ -22,7 +22,7 @@ router.get('/strength/all',async (req,res) => {
 router.get('/strength/find/:strengthId',async (req,res) => {
     const getId = req.params.strengthId;
     const id = await Strength.find({"strengthId": getId})
-    res.json(id)
+    res.json(id);
 });
 
 //Update a strength - POST/PUT, strength/update/:strengthId, Strength.findOneAndUpdate({id: strengthId})
@@ -39,12 +39,16 @@ router.post('/strength/update/:strengthId/:name',async (req,res) => {
 
 //delete a strength - POST/DELETE, /strength/delete/:strengthId, strength.findOneAndUpdate({id: strengthId})- deleted : true
 router.post('/strength/delete/:strengthId', async(req,res) => {
-    const filter = {"strengthId":req.params.strengthId};
-    const update = {"deleted" : true};
-   
-    await Strength.findOneAndUpdate(filter, update);
-
-    res.json({"message" : `The strength has been deleted.`})
+    if(!req.params.strengthId){
+        res.json({"Error": "Could not find the ID"});
+    }else{
+        const filter = {"strengthId":req.params.strengthId};
+        const update = {"deleted" : true};
+       
+        const deletedStrength = await Strength.findOneAndUpdate(filter, update, {new:true});
+    
+        res.json({deletedStrength});
+    }
 });
 
 
