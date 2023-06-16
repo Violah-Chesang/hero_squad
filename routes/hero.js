@@ -113,18 +113,25 @@ router.post('/hero/allocate-squad', async (req,res) => {
 router.get('/hero/without-squad',async (req,res) => {
     //get all hero that assigned is false
     const notAssignedHeroes =await Hero.find({"assigned" : false});
-
-    res.json(notAssignedHeroes);
+    const heroNames = notAssignedHeroes.map((hero) => {
+        return hero.name
+    });
+    res.json(heroNames);
 });
 
 //Hero should not be in more than one squad- POST, hero/hero-assigned-squad/:heroId
 //if assigned is true give an error
-router.get('/hero/hero-assigned-squad/:heroId', async (req,res) => {
-    const hero = await Hero.find({"heroId" : req.params.heroId})
+router.get('/hero/hero-assigned-squad', async (req,res) => {
+    const id = req.body.heroId
+    const hero = await Hero.findOne({"heroId": id});
 
-     if(hero.assigned){
-        res.json({"message" : "Hero already assigned to a squad"})
+
+    if(hero.assigned){
+        res.json({"Error":"Already Assigned"})
+    }else{
+        res.json({"Message": "Not Assigned. Proceed to assign a squad"})
     }
+
 });
 
 module.exports = router
