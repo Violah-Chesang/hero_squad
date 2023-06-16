@@ -58,7 +58,7 @@ router.get('/hero/all',async (req,res) => {
 
  //Find a hero and their characteristics - GET, Hero/find/:heroId, Hero.find({id: heroId})
 router.get('/hero/find/:heroId',async (req,res) => {
-    const heroById = await Hero.find({"heroId": req.params.heroId});
+    const heroById = await Hero.findOne({"heroId": req.params.heroId});
     res.json(heroById);
 });
 
@@ -78,28 +78,34 @@ router.post('/hero/delete/:heroId',async (req,res) => {
     const filter = {"heroId" : req.params.heroId};
     const update = {"deleted": true};
 
-    const deletedHero =  await Hero.findOneAndUpdate(filter,update);
+    const deletedHero =  await Hero.findOneAndUpdate(filter,update, {new:true});
 
-    res.json({"message" : "Record deleted"});
+    res.json({deletedHero});
 });
 
 //Place a hero in a squad - POST, hero/allocate-squad/:heroId, newHeroSquad.save() 
-router.post('/hero/allocate-squad/:heroId', (req,res) => {
+router.post('/hero/allocate-squad', async (req,res) => {
     //check if assigned is false and assigns true.
-    const heroId = req.params.heroId;
-    const squadId = req.body.squadId;
-    const assigned = req.body.assigned;
+    const heroId = req.body.heroId; //select the hero to place
+    const squadId = req.body.squadId; //select the squat a hero will be placed in
+    let assigned = req.body.assigned; //Once squadId is filled, turn assigned to true. It's false by default
     
-     function assignHero(squadId, assigned){
-        if(!assigned && !squadId){
+     function assignHero(squadId){
+        if(squadId){
             assigned = true;
-            squadId = {"squadId" : squadId};
+        }else{
+            res.status(404).json({"Error":"Please assign it a squad"})
+            return;
         }
-        return {squadId, assigned};
+        return assigned;
      }
-     const {squadId : updatedSquadId, assigned : updatedAssigned} = assignHero(squadId, assigned);
-    
-     res.json({ heroId, updatedSquadId, updatedAssigned });
+
+   
+     const newAssigned = assignHero(squadId);
+     const filter = {heroId};
+     const update = {assigned}
+    const updatedHero = await Hero.findOneAndUpdate(filter,update,{new:true})
+     res.json({updatedHero});
 
 });
 
