@@ -1,6 +1,7 @@
 const express = require('express');
 const Squad = require('../models/squad');
 const Hero = require('../models/hero');
+const Strength = require('../models/strength');
 
 const router = express.Router();
 
@@ -69,5 +70,39 @@ router.post('/squad/delete/:squadId',async (req,res) => {
 
     res.json(features);
 });
+
+        //calculate squad's score
+        //TODO
+        //      - Get the heroes with the given squadId
+        //      - do a sum to the heroes' score
+    router.get('/squad/score',async (req, res) => {
+        //user to select the squad to check the scores
+        const squad = await Squad.findOne({"squadId" : req.body.squadId});
+        const id = squad.squadId; 
+
+        //find heroes with the given squadId
+        //use map()
+        const heroes = await Hero.find({"squadId" : id});      
+
+        const allHeroes = heroes.map((hero) => {
+            return hero.name;
+        });
+
+        res.json(allHeroes);
+
+//I want the value of the strength of the hero
+        
+
+        // const strengthName = heroes.strength;
+        // const heroStrength = await Strength.find({"name": strengthName})
+
+        // for(const hero of heroes){
+        //     res.json({"Hero Score" : `Hero ${heroes.name} has ${heroStrength.value}`})
+        // }
+            
+       
+
+    });
+
 
 module.exports = router

@@ -5,7 +5,8 @@ let squadSchema = new mongoose.Schema({
     name: {type: String, required: true},
 	heroMaxNo: {type: Number, max : 5 ,required: true},
 	cause: {type: String},
-    deleted: {type: Boolean, default: false}
+    deleted: {type: Boolean, default: false},
+    score: {type: Number}
 });
 
 let Squad = mongoose.model('Squad', squadSchema);
