@@ -25,7 +25,8 @@ router.post('/hero/add',async (req,res) => {
 
     //squad
     const findHerosSquad =await Squad.findOne({"squadId" : req.body.squadId});
-   
+    const id = findHerosSquad.squadId;
+
     if(!findHerosSquad){
         res.status(400).json({"error" : "Could not find the squad"});
     } 
@@ -38,7 +39,7 @@ router.post('/hero/add',async (req,res) => {
         weakness : weaknessFeature.name,
         deleted : false,
         assigned :false,
-        squadId: findHerosSquad.name
+        squadId: id
       });
 
         await newHero.save();

@@ -2,8 +2,18 @@ const express = require('express');
 const Squad = require('../models/squad');
 const Hero = require('../models/hero');
 const Strength = require('../models/strength');
+const Weakness = require('../models/weakness');
 
 const router = express.Router();
+
+//test route
+router.get('/squad/find',async (req,res) => {
+    const hero = await Hero.find({"squadId": req.body.squadId});
+    const heroName = hero.map((her) => {
+        return her.name;
+    })
+    res.json(heroName);
+});
 
 // Create a Squad - POST, squad/add, newSquad.Save()
 router.post('/squad/add', (req,res) => {
@@ -76,32 +86,84 @@ router.post('/squad/delete/:squadId',async (req,res) => {
         //      - Get the heroes with the given squadId
         //      - do a sum to the heroes' score
     router.get('/squad/score',async (req, res) => {
-        //user to select the squad to check the scores
+        //select the squad to check the scores
         const squad = await Squad.findOne({"squadId" : req.body.squadId});
         const id = squad.squadId; 
+        console.log(id);
 
-        //find heroes with the given squadId
-        //use map()
-        const heroes = await Hero.find({"squadId" : id});      
 
-        const allHeroes = heroes.map((hero) => {
-            return hero.name;
-        });
 
-        res.json(allHeroes);
-
-//I want the value of the strength of the hero
+        // find heroes with the given squadId
+        const heroes = await Hero.find({"squadId" : id}); 
         
+        //find the strength name
+        const heroStrength = heroes.map((hero) => {
+            return hero.strength;
+        })        
+        // console.log(heroStrength);
 
-        // const strengthName = heroes.strength;
-        // const heroStrength = await Strength.find({"name": strengthName})
+        // find strength by the names of the list above
+        const strengths = await Promise.all(
+            heroStrength.map((strengthName) => {
+                return Strength.find({'name': strengthName});
+            })
+        );
+        // console.log(strengths);
 
-        // for(const hero of heroes){
-        //     res.json({"Hero Score" : `Hero ${heroes.name} has ${heroStrength.value}`})
-        // }
-            
-       
+        // find the values
+        const strengthValues = strengths.map((values) => {
+                return values.map((strength) =>{
+                    return strength.value;
+                })
+            });
+        // console.log(strengthValues);
 
+        //find the strength name
+        const heroWeakness = heroes.map((hero) => {
+            return hero.weakness;
+        });
+        // console.log(heroWeakness);
+
+        // find weakness by the names of the list above
+        const weaknesses = await Promise.all(
+            heroWeakness.map((weaknessName) => {
+                return Weakness.find({'name': weaknessName});
+            })
+        );
+        // console.log(weaknesses);
+        // find the values
+        const weaknessValues = weaknesses.map((values) => {
+            return values.map((weakness) =>{
+                return weakness.value;
+            })
+        });
+        // console.log(weaknessValues);
+
+        //find the sum of strength and weakness values. Use array.flat() and array.reduce()
+        //flat()
+        const strengthFlat = strengthValues.flat(Infinity);
+        // console.log(strengthFlat);
+
+        const strengthSum = strengthFlat.reduce((accumulator, currentValue) =>{
+            return accumulator + currentValue;
+        }, 0);
+
+        console.log(strengthSum);
+
+        //weakness sum
+        const weaknessFlat = weaknessValues.flat(Infinity);
+
+        const weaknessSum = weaknessFlat.reduce((accumulator, currentValue) => {
+            return accumulator + currentValue;
+        },0);
+
+        console.log(weaknessSum);
+
+        //find the score. Add strengthSum and WeaknessSum
+        const score = strengthSum + weaknessSum;
+
+        res.json(`Squad ${id} has a score of ${score}`)
+         
     });
 
 
